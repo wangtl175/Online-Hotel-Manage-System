@@ -1,0 +1,71 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <h1>Bookings</h1>
+    <a href="/query_booking" class="btn btn-toolbar">
+        <button type="button" class="btn btn-primary btn-sm">Query Booking</button>
+    </a>
+    <table class="table table-striped">
+        <tr>
+            <th>Booking ID</th>
+            <th>Room ID</th>
+            <th>Guest ID</th>
+            <th>Check in</th>
+            <th>Check out</th>
+            <th>Meal</th>
+            <th>Adults</th>
+            <th>Children</th>
+            <th>Price</th>
+            <th>Days</th>
+            <th>Cost</th>
+            <th>Is paid</th>
+            <th>Operation</th>
+        </tr>
+
+        {% for booking in bookings %}
+            <tr>
+                <td>{{ booking.booking_id }}</td>
+                <td>{{ booking.r_id }}</td>
+                <td>{{ booking.g_id }}</td>
+                <td>{{ booking.from }}</td>
+                <td>{{ booking.to }}</td>
+                <td>{{ booking.meal }}</td>
+                <td>{{ booking.num_adult }}</td>
+                <td>{{ booking.num_child }}</td>
+                <td>{{ booking.price }}</td>
+                <td>{{ booking.days }}</td>
+                <td>{{ booking.cost }}</td>
+                <td>{{ booking.is_paid }}</td>
+                <td>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a href="/edit_booking/{{ booking.booking_id }}" class="btn btn-toolbar">
+                                        <button class="btn btn-primary" type="button">Edit</button>
+                                    </a>
+                                    <form action="/delete_booking/{{ booking.booking_id }}" method="post">
+                                        <a class="btn btn-toolbar">
+                                            <button type="submit" class="btn btn-primary">Delete</button>
+                                        </a>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <span class="badge badge-default">Total Paid: {{ total_paid }}</span>
+            </div>
+            <div class="col-md-6">
+                <span class="badge badge-default">Total Unpaid: {{ total_unpaid }}</span>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

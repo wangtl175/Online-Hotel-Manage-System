@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <h1>Edit Room <small>ID : {{ r_id }}</small></h1>
+    {% from 'includes/_formhelpers.html' import render_field %}
+    <form method="POST" action="">
+        <div class="form-group">
+            {{ render_field(form.r_type, class_="form-control") }}
+        </div>
+
+
+        <div class="form-group">
+            {{ render_field(form.num_bed, class_="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ render_field(form.num_window, class_="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ render_field(form.allow_smoke, class_="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ render_field(form.bathtub, class_="form-control") }}
+        </div>
+        <div class="form-group">
+            {{ render_field(form.price,class_="form-control") }}
+        </div>
+
+        <p><input type="submit" class="btn btn-primary" value="Edit"></p>
+    </form>
+{% endblock %}

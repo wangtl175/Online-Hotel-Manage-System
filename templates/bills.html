@@ -1,0 +1,46 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <h1>Bill for Guest:
+        <small> {{ g_name }} </small>
+    </h1>
+
+    <table class="table table-striped">
+        <tr>
+            <th>Booking ID</th>
+            <th>Room ID</th>
+            <th>Price</th>
+            <th>Check In Date</th>
+            <th>Check Out Date</th>
+            <th>Days</th>
+            <th>Cost</th>
+
+        </tr>
+
+        {% for i in range(0, num) %}
+            <tr>
+            <td>{{ bookings[i].booking_id }}</td>
+
+            <td>{{ bookings[i].r_id }}</td>
+
+            <td>{{ bookings[i].price }}</td>
+
+            <td>{{ bookings[i].from }}</td>
+
+            <td>{{ bookings[i].to }}</td>
+
+            <td>{{ bookings[i].days }}</td>
+
+            <td>{{ bookings[i].cost }}</td>
+        {% endfor %}
+
+        </tr>
+
+    </table>
+    <p style="text-align: right;"><strong>Total Charges: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong>{{ total }}&emsp;&emsp;&emsp;&emsp;
+    </p>
+    <form method="post" action="/bills">
+        <input type="submit" value="Pay">
+    </form>
+
+{% endblock %}

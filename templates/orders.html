@@ -1,0 +1,55 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <h1>Order for Guest:
+        <small> {{ g_name }} </small>
+    </h1>
+    <div>
+        <form method="post" action="/cancel_order">
+            <div>
+                <table class="table table-bordered table-hover" id="table_id">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Booking ID</th>
+                        <th>Room ID</th>
+                        <th>Check in</th>
+                        <th>Check out</th>
+                        <th>meal</th>
+                        <th>num_adult</th>
+                        <th>num_child</th>
+                        <th>price</th>
+                        <th>days</th>
+                        <th>cost</th>
+                        <th>is_paid</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbody_id">
+                    {% for booking in bookings %}
+                        <tr>
+                            <td><label>
+                                <input type="checkbox" name="booking_id" value="{{ booking.booking_id }}">
+                            </label></td>
+                            <td>{{ booking.booking_id }}</td>
+                            <td>{{ booking.r_id }}</td>
+                            <td>{{ booking.from }}</td>
+                            <td>{{ booking.to }}</td>
+                            <td>{{ booking.meal }}</td>
+                            <td>{{ booking.num_adult }}</td>
+                            <td>{{ booking.num_child }}</td>
+                            <td>{{ booking.price }}</td>
+                            <td>{{ booking.days }}</td>
+                            <td>{{ booking.cost }}</td>
+                            <td>{{ booking.is_paid }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                <p style="text-align: right;"><strong>Total Charges:
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong>{{ total }}&emsp;&emsp;&emsp;&emsp;
+                </p>
+            </div>
+            <input type="submit" value="Cancel the Order">
+        </form>
+    </div>
+{% endblock %}

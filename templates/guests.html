@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <h1>Guests</h1>
+    <a href="/query_guest" class="btn btn-toolbar">
+        <button type="button" class="btn btn-primary btn-sm">Query Guest</button>
+    </a>
+    <table class="table table-striped">
+        <tr>
+            <th>Guest ID</th>
+            <th>name</th>
+            <th>phone</th>
+            <th>email</th>
+            <th>country</th>
+            <th>Operation</th>
+        </tr>
+
+        {% for guest in guests %}
+            <tr>
+                <td>{{ guest.g_id }}</td>
+                <td>{{ guest.name }}</td>
+                <td>{{ guest.phone }}</td>
+                <td>{{ guest.e_mail }}</td>
+                <td>{{ guest.country }}</td>
+                <td>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <a href="/edit_guest/{{ guest.g_id }}" class="btn btn-toolbar">
+                                        <button class="btn btn-primary" type="button">Edit</button>
+                                    </a>
+                                    <a href="/guest_bills/{{ guest.g_id }}" class="btn btn-toolbar">
+                                        <button class="btn btn-primary" type="button">Bills</button>
+                                    </a>
+                                    <a href="/guest_orders/{{ guest.g_id }}" class="btn btn-toolbar">
+                                        <button class="btn btn-primary" type="button">Orders</button>
+                                    </a>
+                                    <form action="/delete_guest/{{ guest.g_id }}" method="post">
+                                        <a class="btn btn-toolbar">
+                                            <button type="submit" class="btn btn-primary">Delete</button>
+                                        </a>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

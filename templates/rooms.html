@@ -1,0 +1,82 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <h1>Rooms</h1>
+    <a href="/query_room" class="btn btn-toolbar">
+        <button type="button" class="btn btn-primary btn-sm">Query Rooms</button>
+    </a>
+    <table class="table table-striped">
+        <tr>
+            <th>Room ID</th>
+            <th>Type</th>
+            <th>Windows</th>
+            <th>Smoke</th>
+            <th>Beds</th>
+            <th>Bathtub</th>
+            <th>Price</th>
+            <th>Available</th>
+            {% if is_admin %}
+                <th>Operation</th>
+            {% endif %}
+        </tr>
+
+        {% for room in rooms %}
+            <tr>
+                <td>{{ room.r_id }}</td>
+                <td>{{ room.r_type }}</td>
+                <td>{{ room.num_window }}</td>
+                <td>{{ room.allow_smoke }}</td>
+                <td>{{ room.num_bed }}</td>
+                <td>{{ room.bathtub }}</td>
+                <td>{{ room.price }}</td>
+                {% if room.available %}
+                    <td>Available</td>
+                {% else %}
+                    <td>Not Available</td>
+                {% endif %}
+                {% if is_admin %}
+                    <td>
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <a href="/edit_room/{{ room.r_id }}" class="btn btn-toolbar">
+                                        <button type="button" class="btn btn-primary btn-sm">Edit</button>
+                                    </a>
+                                </div>
+                                <div class="col-md-6">
+                                    <form action="/delete_room/{{ room.r_id }}" method="post">
+                                        <a class="btn btn-toolbar">
+                                            <button type="submit" class="btn btn-warning btn-sm">Delete</button>
+                                        </a>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    </table>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="btn-group" role="group">
+                    <a href="/book" class="btn btn-toolbar">
+                        <button class="btn btn-primary" type="button">
+                            Book Now
+                        </button>
+                    </a>
+                    {% if is_admin %}
+                        <a href="/add_room" class="btn btn-toolbar">
+                            <button class="btn btn-primary" type="button">
+                                Add Rooms
+                            </button>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

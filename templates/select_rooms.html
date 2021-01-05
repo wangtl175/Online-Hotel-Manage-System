@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <h1>Select Rooms</h1>
+    <div>
+        <form  method="post" action="/select_rooms">
+            <div>
+                <table class="table table-bordered table-hover" id="table_id">
+                    <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Room ID</th>
+                        <th>Type</th>
+                        <th>Windows</th>
+                        <th>Smoke</th>
+                        <th>Beds</th>
+                        <th>Bathtub</th>
+                        <th>Price</th>
+                    </tr>
+                    </thead>
+                    <tbody id="tbody_id">
+                    {% for room in rooms %}
+                        <tr>
+                            <td><label>
+                                <input type="checkbox" name="r_id" value="{{ room.r_id }}">
+                            </label></td>
+                            <td>{{ room.r_id }}</td>
+                            <td>{{ room.r_type }}</td>
+                            <td>{{ room.num_window }}</td>
+                            <td>{{ room.allow_smoke }}</td>
+                            <td>{{ room.num_bed }}</td>
+                            <td>{{ room.bathtub }}</td>
+                            <td>{{ room.price }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <input type="submit" value="Book Now">
+        </form>
+    </div>
+{% endblock %}
