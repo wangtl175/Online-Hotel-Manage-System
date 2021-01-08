@@ -619,11 +619,12 @@ def rooms_list():
             rooms[i]['available'] = False
         else:
             rooms[i]['available'] = True
+    cur.close()
     return render_template('rooms.html', rooms=rooms)
 
 
 # condition是字符串，用于选择
-def update_value(table, values, condition):
+def update_value(table, values, condition='true'):
     cmd = 'update `{}` set '.format(table)
     for v in values:
         cmd += '`{}`="{}",'.format(v, values[v])
