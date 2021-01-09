@@ -155,8 +155,8 @@ def book():
     return render_template('book.html', form=form)
 
 
-@is_logged_in
 @app.route('/select_rooms', methods=['POST'])
+@is_logged_in
 def select_rooms():
     rooms = request.form.getlist('r_id')
     if len(rooms) > 0:
@@ -274,8 +274,8 @@ def edit_guest(g_id):
 
 
 # 尚未开始的订单，可以取消
-@is_logged_in
 @app.route('/orders')
+@is_logged_in
 def orders():
     cur = mysql.connection.cursor()
     cur.execute('select * from booking where `g_id`="{}" and `from`>="{}"'.format(session.get('user_id'),
@@ -295,8 +295,8 @@ def orders():
     return render_template('orders.html', bookings=bookings, total=total, g_name=session.get('username'))
 
 
-@is_logged_in
 @app.route('/cancel_order', methods=['POST'])
+@is_logged_in
 def cancel_order():
     bookings = request.form.getlist('booking_id')
     cur = mysql.connection.cursor()
@@ -308,8 +308,8 @@ def cancel_order():
 
 
 # 生成未付款的账单
-@is_logged_in
 @app.route('/bills', methods=['GET', 'POST'])
+@is_logged_in
 def bills_unpaid():
     cur = mysql.connection.cursor()
     cur.execute(
@@ -579,8 +579,8 @@ def guest_bills_list(g_id):
     return render_template('bills.html', g_name=name, bookings=bookings, num=num, total=total)
 
 
-@is_admin_logged_in
 @app.route('/query_guest', methods=['POST', 'GET'])
+@is_admin_logged_in
 def query_guest():
     form = GuestQueryForm()
     if form.validate_on_submit():
