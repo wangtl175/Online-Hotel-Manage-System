@@ -43,12 +43,12 @@ def register():
             password = sha256_crypt.hash(str(form.password.data))
 
             cur = mysql.connection.cursor()
-            existed = cur.execute('select * from guest where name = "{}"'.format(form.name.data))
+            existed = cur.execute('select * from guest where name = %s ', [form.name.data])
             if existed != 0:
                 return 'User name already exists, please change another one.'
             cur.execute(
-                'insert into guest (name, password,phone,e_mail,country) values ("{}","{}","{}","{}","{}")'.format(
-                    form.name.data, password, form.phone.data, form.e_mail.data, form.country.data))
+                'insert into guest (name, password,phone,e_mail,country) values (%s,%s,%s,%s,%s)',
+                [form.name.data, password, form.phone.data, form.e_mail.data, form.country.data])
             mysql.connection.commit()
             cur.close()
             return redirect(url_for('login'))
@@ -65,7 +65,9 @@ def login():
         password_candidate = request.form['password']
         # print(request.form)  # 如果为值为空，这返回''
         cur = mysql.connection.cursor()
-        result = cur.execute('SELECT * FROM guest WHERE name = "{}"'.format(username))
+        # TODO: 当username为 wtl";... -- 时(--后有空格)，会有sql注入风险，不要手工拼接字符串
+        # result = cur.execute('SELECT * FROM guest WHERE name = "{}"'.format(username))
+        result = cur.execute('SELECT * FROM guest WHERE name = %s', [username])
         if result > 0:
             data = cur.fetchone()
             password = data['password']
@@ -87,7 +89,7 @@ def admin_login():
         username = request.form['username']
         password_candidate = request.form['password']
         cur = mysql.connection.cursor()
-        result = cur.execute('SELECT * FROM admin WHERE name = "{}"'.format(username))
+        result = cur.execute('SELECT * FROM admin WHERE name = %s', [username])
         if result > 0:
             data = cur.fetchone()
             password = data['password']
@@ -143,8 +145,8 @@ def book():
         check_in = check_in.strftime('%Y-%m-%d')
         check_out = check_out.strftime('%Y-%m-%d')
         cur.execute(
-            'select * from room where r_id not in (select r_id from booking where `from`<"{}" and `to`>"{}")'.format(
-                check_out, check_in))
+            'select * from room where r_id not in (select r_id from booking where `from`<%s and `to`>%s)',
+            [check_out, check_in])
         rooms = cur.fetchall()
         session['check_in'] = check_in
         session['check_out'] = check_out
@@ -165,9 +167,9 @@ def select_rooms():
         cur = mysql.connection.cursor()
         for r in rooms:
             cur.execute(
-                'insert into booking (`r_id`,`g_id`,`from`,`to`,`meal`,`num_adult`,`num_child`,`is_paid`) values ("{}","{}","{}","{}","{}","{}","{}", "no")'.format(
-                    r, session.get('g_id'), check_in, check_out, session.get('meal'),
-                    session.get('num_adult'), session.get('num_child')))
+                'insert into booking (`r_id`,`g_id`,`from`,`to`,`meal`,`num_adult`,`num_child`,`is_paid`) values (%s,%s,%s,%s,%s,%s,%s, "no")',
+                [r, session.get('g_id'), check_in, check_out, session.get('meal'), session.get('num_adult'),
+                 session.get('num_child')])
         session.pop('g_id')
         session.pop('check_in')
         session.pop('check_out')
@@ -184,7 +186,7 @@ def select_rooms():
 @is_admin_logged_in
 def delete_room(r_id):
     cur = mysql.connection.cursor()
-    cur.execute('delete from room where r_id="{}"'.format(r_id))
+    cur.execute('delete from room where r_id=%s', [r_id])
     mysql.connection.commit()
     cur.close()
     return redirect('/rooms')
@@ -194,7 +196,7 @@ def delete_room(r_id):
 @is_admin_logged_in
 def delete_guest(g_id):
     cur = mysql.connection.cursor()
-    cur.execute('delete from guest where g_id="{}"'.format(g_id))
+    cur.execute('delete from guest where g_id=%s', [g_id])
     mysql.connection.commit()
     cur.close()
     return redirect('/guests')
@@ -222,7 +224,7 @@ def add_room():
 def edit_room(r_id):
     cur = mysql.connection.cursor()
     # result=cur.execute()
-    result = cur.execute("select * from room where r_id={}".format(r_id))
+    result = cur.execute("select * from room where r_id=%s", [r_id])
     room = cur.fetchone()
     cur.close()
     if result > 0:
@@ -624,6 +626,7 @@ def rooms_list():
 
 
 # condition是字符串，用于选择
+# TODO: 防sql注入
 def update_value(table, values, condition='true'):
     cmd = 'update `{}` set '.format(table)
     for v in values:
